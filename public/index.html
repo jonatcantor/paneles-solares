@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadLecturaList = async () => {
     lecturaList.innerHTML = '';
     try {
-      const response = await fetch('/planta_solar');
+      const response = await fetch('/api/planta_solar');
       if (!response.ok) {
         throw new Error('Error al obtener las lecturas de la planta solar');
       }
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteButton.textContent = 'Eliminar';
         deleteButton.addEventListener('click', async () => {
             try {
-            const response = await fetch(`/planta_solar/${Object.keys(data.lecturas)[index]}`, {
+            const response = await fetch(`/api/planta_solar/${Object.keys(data.lecturas)[index]}`, {
                 method: 'DELETE'
             });
             if (!response.ok) {
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
       temperatura_ambiente: formData.get('temperatura_ambiente')
     };
     try {
-      const response = await fetch('/planta_solar', {
+      const response = await fetch('/api/planta_solar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
