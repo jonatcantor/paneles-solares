@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRUD de Lecturas de Planta Solar</title>
+</head>
+<body>
+<h1>CRUD de Lecturas de Planta Solar</h1>
+
+<!-- Formulario para crear una nueva lectura -->
+<h2>Crear Nueva Lectura</h2>
+<form id="createForm">
+  <label for="eficiencia_paneles">Eficiencia de Paneles:</label>
+  <input type="number" id="eficiencia_paneles" name="eficiencia_paneles" required>
+  <label for="estado_componentes">Estado de Componentes:</label>
+  <input type="text" id="estado_componentes" name="estado_componentes" required>
+  <label for="estado_inversores">Estado de Inversores:</label>
+  <input type="text" id="estado_inversores" name="estado_inversores" required>
+  <label for="fecha_hora">Fecha y Hora:</label>
+  <input type="datetime-local" id="fecha_hora" name="fecha_hora" required>
+  <label for="produccion_energia">Producción de Energía:</label>
+  <input type="number" id="produccion_energia" name="produccion_energia" required>
+  <label for="radiacion_solar">Radiación Solar:</label>
+  <input type="number" id="radiacion_solar" name="radiacion_solar" required>
+  <label for="temperatura_ambiente">Temperatura Ambiente:</label>
+  <input type="number" id="temperatura_ambiente" name="temperatura_ambiente" required>
+  <button type="submit">Crear Lectura</button>
+</form>
+
+<!-- Lista de lecturas -->
+<h2>Lista de Lecturas</h2>
+<ul id="lecturaList"></ul>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const lecturaList = document.getElementById('lecturaList');
+
+  // Función para cargar la lista de lecturas
+  const loadLecturaList = async () => {
+    lecturaList.innerHTML = '';
+    try {
+      const response = await fetch('/planta_solar');
+      if (!response.ok) {
+        throw new Error('Error al obtener las lecturas de la planta solar');
+      }
+      const data = await response.json();
+      Object.values(data.lecturas).forEach((lectura, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `ID: ${Object.keys(data.lecturas)[index]}, Eficiencia de Paneles: ${lectura.eficiencia_paneles}, Estado de Componentes: ${lectura.estado_componentes}, Estado de Inversores: ${lectura.estado_inversores}, Fecha y Hora: ${lectura.fecha_hora}, Producción de Energía: ${lectura.produccion_energia}, Radiación Solar: ${lectura.radiacion_solar}, Temperatura Ambiente: ${lectura.temperatura_ambiente}`;
+        
+        // Agrega un botón de eliminación para cada lectura
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Eliminar';
+        deleteButton.addEventListener('click', async () => {
+            try {
+            const response = await fetch(`/planta_solar/${Object.keys(data.lecturas)[index]}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) {
+                throw new Error('Error al eliminar la lectura de la planta solar');
+            }
+            alert('Lectura de la planta solar eliminada exitosamente');
+            loadLecturaList();
+            } catch (error) {
+            console.error(error);
+            alert('Error al eliminar la lectura de la planta solar');
+            }
+        });
+        
+        listItem.appendChild(deleteButton);
+        lecturaList.appendChild(listItem);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Manejar la creación de una nueva lectura
+  const createForm = document.getElementById('createForm');
+  createForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(createForm);
+    const newLectura = {
+      eficiencia_paneles: formData.get('eficiencia_paneles'),
+      estado_componentes: formData.get('estado_componentes'),
+      estado_inversores: formData.get('estado_inversores'),
+      fecha_hora: formData.get('fecha_hora'),
+      produccion_energia: formData.get('produccion_energia'),
+      radiacion_solar: formData.get('radiacion_solar'),
+      temperatura_ambiente: formData.get('temperatura_ambiente')
+    };
+    try {
+      const response = await fetch('/planta_solar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newLectura)
+      });
+      if (!response.ok) {
+        throw new Error('Error al crear una nueva lectura de la planta solar');
+      }
+      alert('Lectura de la planta solar creada exitosamente');
+      loadLecturaList();
+      createForm.reset();
+    } catch (error) {
+      console.error(error);
+      alert('Error al crear una nueva lectura de la planta solar');
+    }
+  });
+
+  // Cargar la lista de lecturas al cargar la página
+  loadLecturaList();
+});
+</script>
+</body>
+</html>
