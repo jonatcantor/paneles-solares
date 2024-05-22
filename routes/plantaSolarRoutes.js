@@ -3,7 +3,6 @@ const admin = require('firebase-admin');
 const router = express.Router();
 
 // Inicializa Firebase Admin SDK (asegúrate de que el archivo JSON de tu clave de servicio esté correctamente configurado)
-const serviceAccount = require("../paneles-solares-a778d-firebase-adminsdk-jkgy3-5da918275d.json");
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
