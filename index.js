@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 // Usar las rutas de la planta solar
-app.use('/planta_solar', plantaSolarRoutes);
+app.use('/api/planta_solar', plantaSolarRoutes);
 
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;
