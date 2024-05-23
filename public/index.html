@@ -21,10 +21,6 @@
   <input type="datetime-local" id="fecha_hora" name="fecha_hora" required>
   <label for="produccion_energia">Producción de Energía:</label>
   <input type="number" id="produccion_energia" name="produccion_energia" required>
-  <label for="radiacion_solar">Radiación Solar:</label>
-  <input type="number" id="radiacion_solar" name="radiacion_solar" required>
-  <label for="temperatura_ambiente">Temperatura Ambiente:</label>
-  <input type="number" id="temperatura_ambiente" name="temperatura_ambiente" required>
   <button type="submit">Crear Lectura</button>
 </form>
 
@@ -47,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
       Object.values(data.lecturas).forEach((lectura, index) => {
         const listItem = document.createElement('li');
-        listItem.textContent = `ID: ${Object.keys(data.lecturas)[index]}, Eficiencia de Paneles: ${lectura.eficiencia_paneles}, Estado de Componentes: ${lectura.estado_componentes}, Estado de Inversores: ${lectura.estado_inversores}, Fecha y Hora: ${lectura.fecha_hora}, Producción de Energía: ${lectura.produccion_energia}, Radiación Solar: ${lectura.radiacion_solar}, Temperatura Ambiente: ${lectura.temperatura_ambiente}`;
+        listItem.textContent = `ID: ${Object.keys(data.lecturas)[index]}, Eficiencia de Paneles: ${lectura.eficiencia_paneles}, Estado de Componentes: ${lectura.estado_componentes}, Estado de Inversores: ${lectura.estado_inversores}, Fecha y Hora: ${lectura.fecha_hora}, Producción de Energía: ${lectura.produccion_energia}`;
         
         // Agrega un botón de eliminación para cada lectura
         const deleteButton = document.createElement('button');
@@ -87,8 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
       estado_inversores: formData.get('estado_inversores'),
       fecha_hora: formData.get('fecha_hora'),
       produccion_energia: formData.get('produccion_energia'),
-      radiacion_solar: formData.get('radiacion_solar'),
-      temperatura_ambiente: formData.get('temperatura_ambiente')
     };
     try {
       const response = await fetch('/api/planta_solar', {

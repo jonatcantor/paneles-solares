@@ -1,7 +1,9 @@
-const express = require('express');
-const plantaSolarRoutes = require('./routes/plantaSolarRoutes');
-const path = require('path'); // Importa el módulo 'path'
 require('dotenv').config();
+
+const express = require('express');
+const path = require('path'); // Importa el módulo 'path'
+
+const plantaSolarRoutes = require('./routes/plantaSolarRoutes');
 
 const app = express();
 
