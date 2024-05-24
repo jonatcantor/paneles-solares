@@ -79,3 +79,64 @@ table th, table td {
     height: 10px;
     background-color: #2196f3;
 }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.navbar {
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    padding: 15px;
+}
+
+.view {
+    display: none;
+    padding: 20px;
+}
+
+.view h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1.2em;
+}
+
+#startButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 20px 2px;
+    cursor: pointer;
+}
