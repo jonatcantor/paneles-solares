@@ -5,7 +5,7 @@ async function cargarDatosAFirebase(datos) {
   // Iterar sobre los datos y cargarlos en Firebase
   for (let dato of datos) {
     // Hacer una solicitud POST para cada dato
-    await fetch('/api/planta_solar', {
+    await fetch('https://paneles-solares-red.vercel.app/api/planta_solar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

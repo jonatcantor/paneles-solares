@@ -93,7 +93,7 @@ const chart = new Chart(ctx, {
 // Función para obtener los datos de la planta solar
 async function obtenerDatosPlantaSolar() {
     try {
-      const response = await fetch('/api/planta_solar'); // Actualiza esta URL para que coincida con la ruta del servidor Express
+      const response = await fetch('https://paneles-solares-red.vercel.app/api/planta_solar'); // Actualiza esta URL para que coincida con la ruta del servidor Express
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

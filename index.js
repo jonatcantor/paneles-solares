@@ -1,11 +1,13 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const path = require('path'); // Importa el módulo 'path'
 
 const plantaSolarRoutes = require('./routes/plantaSolarRoutes');
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 
