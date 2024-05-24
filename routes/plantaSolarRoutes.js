@@ -66,4 +66,22 @@ router.delete('/:lecturaId', async (req, res) => {
   }
 });
 
+
+
+// Función para cargar los datos a Firebase
+function cargarDatosAFirebase(datos) {
+  // Obtener una referencia a la base de datos
+  const db = admin.database();
+  const ref = db.ref('planta_solar/lecturas');
+
+  // Iterar sobre los datos y cargarlos en Firebase
+  datos.forEach(dato => {
+    // Genera un ID único para cada dato
+    const newLecturaRef = ref.push();
+    
+    // Carga el dato en Firebase
+    newLecturaRef.set(dato);
+  });
+}
+
 module.exports = router;

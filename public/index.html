@@ -1,112 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRUD de Lecturas de Planta Solar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+
 </head>
 <body>
-<h1>CRUD de Lecturas de Planta Solar</h1>
+    <nav class="navbar">
+        <a href="#monitoreo" onclick="mostrarVista('monitoreo')">Monitoreo</a>
+        <a href="#estadisticas" onclick="mostrarVista('estadisticas')">Estadísticas</a>
+    </nav>
+    <div id="monitoreo" class="view">
+        <!-- Contenido de la vista de Monitoreo -->
+        <h1>Monitoreo</h1>
+        <!-- Agrega aquí los elementos específicos para esta vista -->
 
-<!-- Formulario para crear una nueva lectura -->
-<h2>Crear Nueva Lectura</h2>
-<form id="createForm">
-  <label for="eficiencia_paneles">Eficiencia de Paneles:</label>
-  <input type="number" id="eficiencia_paneles" name="eficiencia_paneles" required>
-  <label for="estado_componentes">Estado de Componentes:</label>
-  <input type="text" id="estado_componentes" name="estado_componentes" required>
-  <label for="estado_inversores">Estado de Inversores:</label>
-  <input type="text" id="estado_inversores" name="estado_inversores" required>
-  <label for="fecha_hora">Fecha y Hora:</label>
-  <input type="datetime-local" id="fecha_hora" name="fecha_hora" required>
-  <label for="produccion_energia">Producción de Energía:</label>
-  <input type="number" id="produccion_energia" name="produccion_energia" required>
-  <button type="submit">Crear Lectura</button>
-</form>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Producción de Energía</h5>
+                        <p id="produccion_energia" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Estado de los Paneles Solares</h5>
+                        <p id="estado_componentes" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Estado de los Inversores</h5>
+                        <p id="estado_inversores" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Eficiencia de los Paneles Solares</h5>
+                        <p id="eficiencia_paneles" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Fecha y Hora</h5>
+                        <p id="fecha_hora" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- Lista de lecturas -->
-<h2>Lista de Lecturas</h2>
-<ul id="lecturaList"></ul>
+        <button id="startButton">Activar Monitoreo</button>
+    </div>
+    <div id="estadisticas" class="view">
+        <!-- Contenido de la vista de Estadísticas -->
+        <h1>Estadísticas</h1>
+        <!-- Agrega aquí los elementos específicos para esta vista -->
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const lecturaList = document.getElementById('lecturaList');
+       <div class="row">
+            <div class="col-md-12">
+                <!-- Elemento canvas para la gráfica -->
+                <canvas id="graficoEficienciaEnergia"></canvas>
+            </div>
+        </div>
 
-  // Función para cargar la lista de lecturas
-  const loadLecturaList = async () => {
-    lecturaList.innerHTML = '';
-    try {
-      const response = await fetch('/api/planta_solar');
-      if (!response.ok) {
-        throw new Error('Error al obtener las lecturas de la planta solar');
-      }
-      const data = await response.json();
-      Object.values(data.lecturas).forEach((lectura, index) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `ID: ${Object.keys(data.lecturas)[index]}, Eficiencia de Paneles: ${lectura.eficiencia_paneles}, Estado de Componentes: ${lectura.estado_componentes}, Estado de Inversores: ${lectura.estado_inversores}, Fecha y Hora: ${lectura.fecha_hora}, Producción de Energía: ${lectura.produccion_energia}`;
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Sumatoria de Producción de Energía</h5>
+              <p id="sumatoria_produccion_energia" class="card-text"></p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Estado de los Paneles Solares</h5>
+                <p id="porcentaje_estado_paneles_bueno" class="card-text"></p>
+                <p id="porcentaje_estado_paneles_normal" class="card-text"></p>
+                <p id="porcentaje_estado_paneles_excelente" class="card-text"></p>
+                <p id="porcentaje_estado_paneles_defectuoso" class="card-text"></p>
+            </div>
+          </div>
         
-        // Agrega un botón de eliminación para cada lectura
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Eliminar';
-        deleteButton.addEventListener('click', async () => {
-            try {
-            const response = await fetch(`/api/planta_solar/${Object.keys(data.lecturas)[index]}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) {
-                throw new Error('Error al eliminar la lectura de la planta solar');
-            }
-            alert('Lectura de la planta solar eliminada exitosamente');
-            loadLecturaList();
-            } catch (error) {
-            console.error(error);
-            alert('Error al eliminar la lectura de la planta solar');
-            }
-        });
-        
-        listItem.appendChild(deleteButton);
-        lecturaList.appendChild(listItem);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // Manejar la creación de una nueva lectura
-  const createForm = document.getElementById('createForm');
-  createForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const formData = new FormData(createForm);
-    const newLectura = {
-      eficiencia_paneles: formData.get('eficiencia_paneles'),
-      estado_componentes: formData.get('estado_componentes'),
-      estado_inversores: formData.get('estado_inversores'),
-      fecha_hora: formData.get('fecha_hora'),
-      produccion_energia: formData.get('produccion_energia'),
-    };
-    try {
-      const response = await fetch('/api/planta_solar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newLectura)
-      });
-      if (!response.ok) {
-        throw new Error('Error al crear una nueva lectura de la planta solar');
-      }
-      alert('Lectura de la planta solar creada exitosamente');
-      loadLecturaList();
-      createForm.reset();
-    } catch (error) {
-      console.error(error);
-      alert('Error al crear una nueva lectura de la planta solar');
-    }
-  });
-
-  // Cargar la lista de lecturas al cargar la página
-  loadLecturaList();
-});
-</script>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Estado de los Inversores</h5>
+              <p id="porcentaje_estado_inversores_mantenimiento" class="card-text"></p>
+              <p id="porcentaje_estado_inversores_dañado" class="card-text"></p>
+              <p id="porcentaje_estado_inversores_funcionando" class="card-text"></p>
+            </div>
+          </div>
+          
+    </div>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="estadisticas.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
